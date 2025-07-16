@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { readVideoInfo, waitForVideoInfoChange } from 'video/utils/videoInfoUtils';
+import { EVideoStatus } from 'video/constants';
+import { createVideoInfo, readVideoInfo, updateVideoInfo, waitForVideoInfoChange } from 'video/utils/videoInfoUtils';
 
 export const config = {
   api: {
@@ -12,8 +13,19 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const id = req.query.id as string;
-    const version = parseInt(req.query.version as string);
+    let id = req.query.id as string;
+    let version = parseInt(req.query.version as string);
+
+    if (req.query.id === 'undefined' || req.query.version === 'undefined') {
+      id = crypto.randomUUID();
+      version = 0;
+
+      await createVideoInfo(id);
+      await updateVideoInfo(id, v => ({
+        ...v,
+        status: EVideoStatus.FAILED_TO_UPLOAD,
+      }));
+    }
 
     const result = await readVideoInfo(id);
 
