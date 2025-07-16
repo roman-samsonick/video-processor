@@ -99,3 +99,4 @@ export function pathToFrame(guid: string, index: number) {
 }
 
 export const MAX_FRAMES = 50;
+export const STUB_GUID = '2701aea8-ab8e-43e1-891d-d687157773ef';

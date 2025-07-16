@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { IVideoInfo, pathToFrame } from 'video/constants';
+import { IVideoInfo, pathToFrame, STUB_GUID } from 'video/constants';
 
 export function AllVideos({ allVideos }: { allVideos: IVideoInfo[] }) {
   return <div className="videos">
-    {allVideos.map((videoInfo) => {
+    {allVideos.filter(v => v.id !== STUB_GUID).map((videoInfo) => {
       return <Link shallow
                    href={'/video/' + videoInfo.id}
                    key={videoInfo.id}

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { EVideoStatus } from 'video/constants';
+import { EVideoStatus, pathToVideoFolder, STUB_GUID } from 'video/constants';
+import { exists, getAbsolutePath } from 'video/utils/serverUtils';
 import { createVideoInfo, readVideoInfo, updateVideoInfo, waitForVideoInfoChange } from 'video/utils/videoInfoUtils';
 
 export const config = {
@@ -16,15 +17,17 @@ export default async function handler(
     let id = req.query.id as string;
     let version = parseInt(req.query.version as string);
 
-    if (req.query.id === 'undefined' || req.query.version === 'undefined') {
-      id = crypto.randomUUID();
+    if (req.query.id === 'undefined' || req.query.version === 'undefined' || !req.query.id || !req.query.version) {
+      id = STUB_GUID;
       version = 0;
 
-      await createVideoInfo(id);
-      await updateVideoInfo(id, v => ({
-        ...v,
-        status: EVideoStatus.FAILED_TO_UPLOAD,
-      }));
+      if (!await exists(getAbsolutePath(false, pathToVideoFolder(id)))) {
+        await createVideoInfo(id);
+        await updateVideoInfo(id, v => ({
+          ...v,
+          status: EVideoStatus.FAILED_TO_UPLOAD,
+        }));
+      }
     }
 
     const result = await readVideoInfo(id);
