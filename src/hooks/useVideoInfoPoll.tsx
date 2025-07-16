@@ -1,9 +1,11 @@
-import { IVideoInfo } from 'video/constants';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { IVideoInfo } from 'video/constants';
 import { callApi } from 'video/utils/clientUtils';
 
 export function useVideoInfoPoll(videoInfoInitial: IVideoInfo) {
   const [videoInfo, setVideoInfo] = useState(videoInfoInitial);
+  const router = useRouter()
 
   useEffect(() => {
     let info = videoInfo;
@@ -16,11 +18,14 @@ export function useVideoInfoPoll(videoInfoInitial: IVideoInfo) {
             {},
           );
 
-          setVideoInfo(res);
-          info = res;
+          if (res && res.id === info.id) {
+            setVideoInfo(res);
+            info = res;
+          }
         } catch (e) {
           console.log(e);
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await router.push('/');
+          return;
         }
       }
     };

@@ -6,5 +6,9 @@ export async function callApi<TIn, TOut>(path: string, body: TIn): Promise<TOut>
       : JSON.stringify(body),
   });
 
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
   return await response.json();
 }

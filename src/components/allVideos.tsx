@@ -1,5 +1,5 @@
-import { IVideoInfo, pathToFrame } from 'video/constants';
 import Link from 'next/link';
+import { IVideoInfo, pathToFrame } from 'video/constants';
 
 export function AllVideos({ allVideos }: { allVideos: IVideoInfo[] }) {
   return <div className="videos">
@@ -17,9 +17,10 @@ export function AllVideos({ allVideos }: { allVideos: IVideoInfo[] }) {
             <p className="filename_start">{videoInfo.original.originalFilename?.slice(0, -10)}</p>
             <p className="filename_end">{videoInfo.original.originalFilename?.slice(-10)}</p>
           </div>
-          <p>
+
+          {!!videoInfo.format?.duration && <p>
             {Math.round(Number.parseFloat(videoInfo.format.duration))} сек.
-          </p>
+          </p>}
 
         </div>
       </Link>;
