@@ -24,7 +24,7 @@ export function useVideoInfoPoll(videoInfoInitial: IVideoInfo) {
           }
         } catch (e) {
           console.log(e);
-          await router.push('/');
+          await new Promise(resolve => setTimeout(resolve, 3000));
           return;
         }
       }
