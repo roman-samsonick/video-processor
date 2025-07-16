@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { ChangeEvent, useRef } from 'react';
-import { IVideoInfo } from 'video/constants';
+import { IVideoInfo, STUB_GUID } from 'video/constants';
 import { callApi } from 'video/utils/clientUtils';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { exists, getAbsolutePath, readDir } from 'video/utils/serverUtils';
@@ -67,7 +67,7 @@ export default function Home({
         Скачать тестовое видео для проверки
       </a>
 
-      {!!allVideos.length && (
+      {!!allVideos.filter(v => v.id !== STUB_GUID).length && (
         <AllVideos allVideos={allVideos} />
       )}
     </div>
